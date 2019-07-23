@@ -271,19 +271,12 @@ class Command
      */
     private function quote($argument): string
     {
-        $quoteCharacter = $this->getQuoteCharacter();
-
-        if ($quoteCharacter === static::QUOTE_CHARACTER_SINGLE && strpos($argument, static::QUOTE_CHARACTER_SINGLE) !== false) {
-            $quoteCharacter = static::QUOTE_CHARACTER_DOUBLE;
-        }
-
-        if ($quoteCharacter === static::QUOTE_CHARACTER_DOUBLE && strpos($argument, static::QUOTE_CHARACTER_DOUBLE) !== false) {
-            $quoteCharacter = static::QUOTE_CHARACTER_SINGLE;
-        }
-
-        if (strpos($argument, static::QUOTE_CHARACTER_SINGLE) !== false && strpos($argument, static::QUOTE_CHARACTER_DOUBLE) !== false) {
-            $quoteCharacter = static::QUOTE_CHARACTER_DOUBLE;
-            $argument = $this->escape($argument);
+        if (strpos($argument, $this->getQuoteCharacter()) !== false) {
+            if ($this->getQuoteCharacter() === static::QUOTE_CHARACTER_SINGLE) {
+                return '$' . $quoteCharacter . $this->escape($argument) . $quoteCharacter;
+            }
+            
+            return $quoteCharacter . $this->escape($argument) . $quoteCharacter;
         }
 
         return $quoteCharacter . $argument . $quoteCharacter;
@@ -296,6 +289,6 @@ class Command
      */
     private function escape(string $argument): string
     {
-        return str_replace(static::QUOTE_CHARACTER_DOUBLE, '\\' . static::QUOTE_CHARACTER_DOUBLE, $argument);
+        return str_replace($this->getQuoteCharacter(), '\\' . $this->getQuoteCharacter(), $argument);
     }
 }
