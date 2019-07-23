@@ -272,8 +272,8 @@ class Command
     private function quote($argument): string
     {
         $quoteCharacter = $this->getQuoteCharacter();
-        if (strpos($argument, quoteCharacter) !== false) {
-            if ( === static::QUOTE_CHARACTER_SINGLE) {
+        if (strpos($argument, $quoteCharacter) !== false) {
+            if ($quoteCharacter === static::QUOTE_CHARACTER_SINGLE) {
                 return '$' . $quoteCharacter . $this->escape($argument) . $quoteCharacter;
             }
             
