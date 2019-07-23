@@ -77,5 +77,10 @@ class CommandTest extends TestCase
         $command->addOption('-L');
         $this->assertEquals('curl http://example.com -v -L', $command->build());
 
+        $command->setTemplate(Command::TEMPLATE_NAME . Command::TEMPLATE_URL);
+        $this->assertEquals('curl http://example.com', $command->build());
+
+        $command->setTemplate('');
+        $this->assertEquals('', $command->build());
     }
 }
