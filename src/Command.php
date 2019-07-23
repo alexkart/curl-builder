@@ -7,7 +7,7 @@ class Command
     private const NAME = 'curl';
     private $url;
 
-    public function build()
+    public function build(): string
     {
         return static::NAME . ' ' . $this->getUrl();
     }
@@ -16,7 +16,7 @@ class Command
      * @param mixed $url
      * @return Command
      */
-    public function setUrl($url)
+    public function setUrl($url): Command
     {
         $this->url = $url;
         return $this;
@@ -29,6 +29,4 @@ class Command
     {
         return $this->url;
     }
-
-
 }
