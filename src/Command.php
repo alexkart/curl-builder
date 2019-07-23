@@ -20,6 +20,16 @@ class Command
     public const TEMPLATE_URL = '{url}';
 
     /**
+     * Single quote character
+     */
+    public const QUOTE_CHARACTER_SINGLE = "'";
+
+    /**
+     * Double quote character
+     */
+    public const QUOTE_CHARACTER_DOUBLE = '"';
+
+    /**
      * @var string command name
      */
     private const NAME = 'curl';
@@ -44,9 +54,16 @@ class Command
      */
     private $options = [];
 
+    /**
+     * Character used to quote arguments
+     * @var string
+     */
+    private $quoteCharacter;
+
     public function __construct()
     {
         $this->initTemplate();
+        $this->initQuoteCharacter();
     }
 
     /**
@@ -150,11 +167,19 @@ class Command
     }
 
     /**
-     * Init default command template
+     * Inits default command template
      */
     private function initTemplate(): void
     {
         $this->setTemplate(static::TEMPLATE_NAME . static::TEMPLATE_OPTIONS . static::TEMPLATE_URL);
+    }
+
+    /**
+     * Inits default quote character
+     */
+    private function initQuoteCharacter(): void
+    {
+        $this->setQuoteCharacter(static::QUOTE_CHARACTER_SINGLE);
     }
 
     /**
@@ -175,6 +200,9 @@ class Command
         if (is_array($options) && !empty($options)) {
             foreach ($options as $option => $argument) {
                 $optionsString .= ' ' . $option;
+                if ($argument !== null) {
+                    $optionsString .= ' ' . $this->quote($argument);
+                }
             }
         }
         $optionsString = trim($optionsString);
@@ -216,5 +244,58 @@ class Command
     private function getTemplatePartPattern($search): string
     {
         return '/ ?' . str_replace(['{', '}'], ['\{', '\}'], $search) . ' ?/';
+    }
+
+    /**
+     * @param string $quoteCharacter
+     * @return Command
+     */
+    public function setQuoteCharacter(string $quoteCharacter): Command
+    {
+        $this->quoteCharacter = $quoteCharacter;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQuoteCharacter(): string
+    {
+        return $this->quoteCharacter;
+    }
+
+    /**
+     * Quotes argument, auto detects if quote character needs to be switched and if argument should be escaped
+     * @param string $argument
+     * @return string
+     */
+    private function quote($argument): string
+    {
+        $quoteCharacter = $this->getQuoteCharacter();
+
+        if ($quoteCharacter === static::QUOTE_CHARACTER_SINGLE && strpos($argument, static::QUOTE_CHARACTER_SINGLE) !== false) {
+            $quoteCharacter = static::QUOTE_CHARACTER_DOUBLE;
+        }
+
+        if ($quoteCharacter === static::QUOTE_CHARACTER_DOUBLE && strpos($argument, static::QUOTE_CHARACTER_DOUBLE) !== false) {
+            $quoteCharacter = static::QUOTE_CHARACTER_SINGLE;
+        }
+
+        if (strpos($argument, static::QUOTE_CHARACTER_SINGLE) !== false && strpos($argument, static::QUOTE_CHARACTER_DOUBLE) !== false) {
+            $quoteCharacter = static::QUOTE_CHARACTER_DOUBLE;
+            $argument = $this->escape($argument);
+        }
+
+        return $quoteCharacter . $argument . $quoteCharacter;
+    }
+
+    /**
+     * Escapes double quotes in the argument
+     * @param string $argument
+     * @return string
+     */
+    private function escape(string $argument): string
+    {
+        return str_replace(static::QUOTE_CHARACTER_DOUBLE, '\\' . static::QUOTE_CHARACTER_DOUBLE, $argument);
     }
 }
