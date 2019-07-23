@@ -1,0 +1,15 @@
+language: php
+
+env:
+  global:
+    - DEFAULT_COMPOSER_FLAGS="--prefer-dist --no-interaction --no-progress --optimize-autoloader"
+
+install:
+  # install composer dependencies
+  - travis_retry composer self-update
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - travis_retry composer install $DEFAULT_COMPOSER_FLAGS
+
+before_script: travis_retry mysql -e 'CREATE DATABASE `test`;';
+
+script: vendor/bin/phpunit --verbose
