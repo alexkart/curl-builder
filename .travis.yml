@@ -10,4 +10,4 @@ install:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - travis_retry composer install $DEFAULT_COMPOSER_FLAGS
 
-script: vendor/bin/phpunit --verbose
+script: vendor/bin/phpunit --verbose --bootstrap vendor/autoload.php
