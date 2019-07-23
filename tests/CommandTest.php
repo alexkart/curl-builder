@@ -148,6 +148,6 @@ class CommandTest extends TestCase
         $this->assertEquals('curl -d "{ \"name\": \"I\'m your father\" }" http://example.com', $command->build());
 
         $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
-        $this->assertEquals("curl -d '{ \"name\": \"I\'m your father\" }' http://example.com", $command->build());
+        $this->assertEquals("curl -d $'{ \"name\": \"I\'m your father\" }' http://example.com", $command->build());
     }
 }
