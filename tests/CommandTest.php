@@ -133,13 +133,13 @@ class CommandTest extends TestCase
         $command = new Command();
         $command->setUrl('http://example.com');
         $command->addOption('-d', "I'm your father");
-        $this->assertEquals('curl -d "I\'m your father" http://example.com', $command->build());
+        $this->assertEquals("curl -d $'I\'m your father' http://example.com", $command->build());
 
         $command = new Command();
         $command->setUrl('http://example.com');
         $command->addOption('-d', '{ "name": "Darth" }');
         $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
-        $this->assertEquals('curl -d \'{ "name": "Darth" }\' http://example.com', $command->build());
+        $this->assertEquals('curl -d "{ \"name\": \"Darth\" }" http://example.com', $command->build());
 
         $command = new Command();
         $command->setUrl('http://example.com');
@@ -148,13 +148,6 @@ class CommandTest extends TestCase
         $this->assertEquals('curl -d "{ \"name\": \"I\'m your father\" }" http://example.com', $command->build());
 
         $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
-        $this->assertEquals('curl -d "{ \"name\": \"I\'m your father\" }" http://example.com', $command->build());
-
-        $command = new Command();
-        $command->setUrl('http://example.com');
-        $command->addOption('-d', "I'm your father");
-        $command->addOption('-A', 'arbitrary');
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
-        $this->assertEquals('curl -d "I\'m your father" -A \'arbitrary\' http://example.com', $command->build());
+        $this->assertEquals("curl -d '{ \"name\": \"I\'m your father\" }' http://example.com", $command->build());
     }
 }
