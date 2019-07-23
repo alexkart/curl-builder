@@ -1,0 +1,27 @@
+{
+  "name": "alexkart/curl-builder",
+  "description": "PSR-7 compatible curl builder.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexander Kartavenko",
+      "email": "askemailbox@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "^7.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Alexkart\\CurlBuilder\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Alexkart\\CurlBuilder\\Tests\\": "tests"
+    }
+  }
+}
