@@ -10,6 +10,4 @@ install:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - travis_retry composer install $DEFAULT_COMPOSER_FLAGS
 
-before_script: travis_retry mysql -e 'CREATE DATABASE `test`;';
-
 script: vendor/bin/phpunit --verbose
