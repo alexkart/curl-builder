@@ -81,7 +81,6 @@ class Command
     {
         $this->setCommand($this->getTemplate());
         $this->buildName();
-        $this->parseRequest();
         $this->buildOptions();
         $this->buildUrl();
         return $this->getCommand();
@@ -343,12 +342,18 @@ class Command
 
 
     /**
+     * Sets request. If $parse = true gets data from request
      * @param ServerRequestInterface|null $request
+     * @param bool $parse
      * @return Command
      */
-    public function setRequest(?ServerRequestInterface $request): Command
+    public function setRequest(?ServerRequestInterface $request, $parse = true): Command
     {
         $this->request = $request;
+        if ($parse) {
+            $this->parseRequest();
+        }
+
         return $this;
     }
 
@@ -382,6 +387,9 @@ class Command
         }
 
         // data
-        $this->addOption('-d', $request->getBody()->getContents());
+        $data = (string)$request->getBody();
+        if (!empty($data)) {
+            $this->addOption('-d', (string)$request->getBody());
+        }
     }
 }

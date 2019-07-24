@@ -3,6 +3,7 @@
 namespace Alexkart\CurlBuilder\Tests;
 
 use Alexkart\CurlBuilder\Command;
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 
 class CommandTest extends TestCase
@@ -256,9 +257,27 @@ EXP;
 
     public function testPsrHttpRequest(): void
     {
-        $request = new Request();
+        $request = new ServerRequest('GET', 'http://example.com');
         $command = new Command();
         $command->setRequest($request);
+        $this->assertEquals('curl http://example.com', $command->build());
+
+        $request = new ServerRequest('POST', 'http://example.com', [
+            'Connection' => ['keep-alive'],
+            'Accept' => [
+                'text/html',
+                'application/xhtml+xml',
+            ],
+        ], 'data');
+
+        $command = new Command();
+        $command->setRequest($request);
+        $this->assertEquals("curl -H 'Connection: keep-alive' -H 'Accept: text/html, application/xhtml+xml' -d 'data' http://example.com", $command->build());
+
+        $command = new Command();
+        $command->setRequest($request, false);
+        $this->assertEquals('curl', $command->build());
+        $command->parseRequest();
         $this->assertEquals("curl -H 'Connection: keep-alive' -H 'Accept: text/html, application/xhtml+xml' -d 'data' http://example.com", $command->build());
     }
 }
