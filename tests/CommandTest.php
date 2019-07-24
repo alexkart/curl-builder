@@ -120,34 +120,92 @@ class CommandTest extends TestCase
         $command = new Command();
         $command->setUrl('http://example.com');
         $command->addOption('-d', 'arbitrary');
+
+        // default is singe
+        $this->assertEquals("curl -d 'arbitrary' http://example.com", $command->build());
+
         $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
         $this->assertEquals('curl -d "arbitrary" http://example.com', $command->build());
 
-        $command->addOption('-d', '{ "name": "Darth" }');
         $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
-        $this->assertEquals('curl -d \'{ "name": "Darth" }\' http://example.com', $command->build());
+        $this->assertEquals("curl -d 'arbitrary' http://example.com", $command->build());
+
+        $command->setQuoteCharacter('');
+        $this->assertEquals('curl -d arbitrary http://example.com', $command->build());
     }
 
-    public function testBuildAutoSwitchQuoteCharacter(): void
+    public function testBuildEscapeArguments(): void
     {
+        $argument = <<<ARG
+x=test'1
+ARG;
+        $expected = <<<EXP
+curl -d $'x=test\'1' http://example.com
+EXP;
         $command = new Command();
-        $command->setUrl('http://example.com');
-        $command->addOption('-d', "I'm your father");
-        $this->assertEquals("curl -d $'I\'m your father' http://example.com", $command->build());
-
-        $command = new Command();
-        $command->setUrl('http://example.com');
-        $command->addOption('-d', '{ "name": "Darth" }');
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
-        $this->assertEquals('curl -d "{ \"name\": \"Darth\" }" http://example.com', $command->build());
-
-        $command = new Command();
-        $command->setUrl('http://example.com');
-        $command->addOption('-d', '{ "name": "I\'m your father" }');
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
-        $this->assertEquals('curl -d "{ \"name\": \"I\'m your father\" }" http://example.com', $command->build());
-
         $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
-        $this->assertEquals("curl -d $'{ \"name\": \"I\'m your father\" }' http://example.com", $command->build());
+        $command->setUrl('http://example.com');
+        $command->addOption('-d', $argument);
+        $this->assertEquals($expected, $command->build());
+
+        $argument = <<<ARG
+x=test"2
+ARG;
+        $expected = <<<EXP
+curl -d 'x=test"2' http://example.com
+EXP;
+        $command = new Command();
+        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
+        $command->setUrl('http://example.com');
+        $command->addOption('-d', $argument);
+        $this->assertEquals($expected, $command->build());
+
+        $argument = <<<ARG
+x=test'1"2
+ARG;
+        $expected = <<<EXP
+curl -d $'x=test\'1"2' http://example.com
+EXP;
+        $command = new Command();
+        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
+        $command->setUrl('http://example.com');
+        $command->addOption('-d', $argument);
+        $this->assertEquals($expected, $command->build());
+
+        $argument = <<<ARG
+x=test'1
+ARG;
+        $expected = <<<EXP
+curl -d "x=test'1" http://example.com
+EXP;
+        $command = new Command();
+        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
+        $command->setUrl('http://example.com');
+        $command->addOption('-d', $argument);
+        $this->assertEquals($expected, $command->build());
+
+        $argument = <<<ARG
+x=test"2
+ARG;
+        $expected = <<<EXP
+curl -d "x=test\"2" http://example.com
+EXP;
+        $command = new Command();
+        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
+        $command->setUrl('http://example.com');
+        $command->addOption('-d', $argument);
+        $this->assertEquals($expected, $command->build());
+
+        $argument = <<<ARG
+x=test'1"2
+ARG;
+        $expected = <<<EXP
+curl -d "x=test'1\"2" http://example.com
+EXP;
+        $command = new Command();
+        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
+        $command->setUrl('http://example.com');
+        $command->addOption('-d', $argument);
+        $this->assertEquals($expected, $command->build());
     }
 }

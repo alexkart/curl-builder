@@ -265,18 +265,23 @@ class Command
     }
 
     /**
-     * Quotes argument, auto detects if quote character needs to be switched and if argument should be escaped
+     * Quotes argument
      * @param string $argument
      * @return string
      */
     private function quote($argument): string
     {
         $quoteCharacter = $this->getQuoteCharacter();
+
+        if ($quoteCharacter === '') {
+            return $argument;
+        }
+
         if (strpos($argument, $quoteCharacter) !== false) {
             if ($quoteCharacter === static::QUOTE_CHARACTER_SINGLE) {
                 return '$' . $quoteCharacter . $this->escape($argument) . $quoteCharacter;
             }
-            
+
             return $quoteCharacter . $this->escape($argument) . $quoteCharacter;
         }
 
