@@ -54,7 +54,7 @@ class CommandTest extends TestCase
         $command->setOptions([]);
         $this->assertEquals('curl http://example.com', $command->build());
 
-        $command->setOptions(['-L' => null, '-v' => null]);
+        $command->setOptions(['-L' => [null], '-v' => [null]]);
         $this->assertEquals('curl -L -v http://example.com', $command->build());
     }
 
@@ -65,7 +65,7 @@ class CommandTest extends TestCase
         $command->addOption('-v');
         $command->addOption('-L');
         $command->addOption('-L');
-        $this->assertEquals('curl -v -L http://example.com', $command->build());
+        $this->assertEquals('curl -v -L -L http://example.com', $command->build());
     }
 
     public function testBuildSetTemplate(): void
@@ -207,5 +207,14 @@ EXP;
         $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
+    }
+
+    public function testBuildMultipleOptions(): void
+    {
+        $command = new Command();
+        $command->setUrl('http://example.com');
+        $command->addOption('-H', 'Connection: keep-alive');
+        $command->addOption('-H', 'Cache-Control: max-age=0');
+        $this->assertEquals("curl -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' http://example.com", $command->build());
     }
 }

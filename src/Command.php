@@ -122,6 +122,7 @@ class Command
      */
     public function setOptions(array $options): Command
     {
+        // TODO more user friendly syntax
         $this->options = $options;
         return $this;
     }
@@ -141,7 +142,7 @@ class Command
      */
     public function addOption($option, $argument = null): Command
     {
-        $this->options[$option] = $argument;
+        $this->options[$option][] = $argument;
         return $this;
     }
 
@@ -198,10 +199,12 @@ class Command
         $optionsString = '';
         $options = $this->getOptions();
         if (is_array($options) && !empty($options)) {
-            foreach ($options as $option => $argument) {
-                $optionsString .= ' ' . $option;
-                if ($argument !== null) {
-                    $optionsString .= ' ' . $this->quote($argument);
+            foreach ($options as $option => $arguments) {
+                foreach ($arguments as $argument) {
+                    $optionsString .= ' ' . $option;
+                    if ($argument !== null) {
+                        $optionsString .= ' ' . $this->quote($argument);
+                    }
                 }
             }
         }
