@@ -145,9 +145,17 @@ class Command
         return $this;
     }
 
-    public function addOptions(array $options)
+    /**
+     * @param array $options
+     */
+    public function addOptions(array $options): void
     {
-        // TODO
+        $options = $this->toInternalFormat($options);
+        foreach ($options as $option => $arguments) {
+            foreach ($arguments as $argument) {
+                $this->addOption($option, $argument);
+            }
+        }
     }
 
     /**

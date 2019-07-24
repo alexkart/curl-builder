@@ -241,4 +241,16 @@ EXP;
         $command->addOption('-H', 'Cache-Control: max-age=0');
         $this->assertEquals("curl -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' http://example.com", $command->build());
     }
+
+    public function testBuildAddOptions(): void
+    {
+        $command = new Command();
+        $command->setUrl('http://example.com');
+        $command->addOption('-v');
+        $command->addOptions([
+            '-L',
+            '-d' => 'test'
+        ]);
+        $this->assertEquals("curl -v -L -d 'test' http://example.com", $command->build());
+    }
 }
