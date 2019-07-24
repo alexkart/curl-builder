@@ -51,11 +51,35 @@ class CommandTest extends TestCase
         $command->addOption('-L');
         $this->assertEquals('curl -v -L http://example.com', $command->build());
 
+
+    }
+
+    public function testBuildSetOptions(): void
+    {
+        $command = new Command();
+        $command->setUrl('http://example.com');
+
         $command->setOptions([]);
         $this->assertEquals('curl http://example.com', $command->build());
 
         $command->setOptions(['-L' => [null], '-v' => [null]]);
         $this->assertEquals('curl -L -v http://example.com', $command->build());
+
+        $command->setOptions(['-L' => null, '-v' => null]);
+        $this->assertEquals('curl -L -v http://example.com', $command->build());
+
+        $command->setOptions(['-d' => 'test1', '-H' => 'test2']);
+        $this->assertEquals("curl -d 'test1' -H 'test2' http://example.com", $command->build());
+
+        $command->setOptions(['-H' => ['test1', 'test2']]);
+        $this->assertEquals("curl -H 'test1' -H 'test2' http://example.com", $command->build());
+
+        $command->setOptions(['-L', '-v']);
+        $this->assertEquals('curl -L -v http://example.com', $command->build());
+
+        // mixed format
+        $command->setOptions(['-L', '-v' => null, '--insecure' => [null], '-d' => 'test1', '-H' => ['test2']]);
+        $this->assertEquals("curl -L -v --insecure -d 'test1' -H 'test2' http://example.com", $command->build());
     }
 
     public function testBuildDuplicatedOptions(): void

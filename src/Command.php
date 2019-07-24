@@ -122,8 +122,7 @@ class Command
      */
     public function setOptions(array $options): Command
     {
-        // TODO more user friendly syntax
-        $this->options = $options;
+        $this->options = $this->toInternalFormat($options);
         return $this;
     }
 
@@ -299,5 +298,30 @@ class Command
     private function escape(string $argument): string
     {
         return str_replace($this->getQuoteCharacter(), '\\' . $this->getQuoteCharacter(), $argument);
+    }
+
+    /**
+     * Converts option from user friendly format ot internal format
+     * @param array $options
+     * @return array
+     */
+    private function toInternalFormat(array $options): array
+    {
+        $formattedOptions = [];
+        foreach ($options as $option => $arguments) {
+            $option = trim($option);
+            if (strpos($option, '-') !== 0) {
+                // ['-L', '-v']
+                $formattedOptions[$arguments] = [null];
+            } elseif (!is_array($arguments)) {
+                // ['-L' => null, '-v' => null]
+                $formattedOptions[$option] = [$arguments];
+            } else {
+                // internal format
+                $formattedOptions[$option] = $arguments;
+            }
+        }
+
+        return $formattedOptions;
     }
 }
