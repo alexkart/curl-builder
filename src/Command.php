@@ -2,6 +2,8 @@
 
 namespace Alexkart\CurlBuilder;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 class Command
 {
     /**
@@ -60,6 +62,11 @@ class Command
      */
     private $quoteCharacter;
 
+    /**
+     * @var ServerRequestInterface|null
+     */
+    private $request;
+
     public function __construct()
     {
         $this->initTemplate();
@@ -74,6 +81,7 @@ class Command
     {
         $this->setCommand($this->getTemplate());
         $this->buildName();
+        $this->parseRequest();
         $this->buildOptions();
         $this->buildUrl();
         return $this->getCommand();
@@ -331,5 +339,49 @@ class Command
         }
 
         return $formattedOptions;
+    }
+
+
+    /**
+     * @param ServerRequestInterface|null $request
+     * @return Command
+     */
+    public function setRequest(?ServerRequestInterface $request): Command
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    /**
+     * @return ServerRequestInterface|null
+     */
+    public function getRequest(): ?ServerRequestInterface
+    {
+        return $this->request;
+    }
+
+    /**
+     * Gets data from request
+     */
+    public function parseRequest(): void
+    {
+        $request = $this->getRequest();
+        if ($request === null) {
+            return;
+        }
+
+        // url
+        $this->setUrl((string)$request->getUri());
+
+        // headers
+        foreach ($request->getHeaders() as $name => $values) {
+            if (strtolower($name) === 'host') {
+                continue;
+            }
+            $this->addOption('-H', $name . ': ' . $request->getHeaderLine($name));
+        }
+
+        // data
+        $this->addOption('-d', $request->getBody()->getContents());
     }
 }

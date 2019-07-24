@@ -253,4 +253,12 @@ EXP;
         ]);
         $this->assertEquals("curl -v -L -d 'test' http://example.com", $command->build());
     }
+
+    public function testPsrHttpRequest(): void
+    {
+        $request = new Request();
+        $command = new Command();
+        $command->setRequest($request);
+        $this->assertEquals("curl -H 'Connection: keep-alive' -H 'Accept: text/html, application/xhtml+xml' -d 'data' http://example.com", $command->build());
+    }
 }
