@@ -1,14 +1,9 @@
 build:
   nodes:
-    analysis:
+    my-tests-with-coverage:
       tests:
         override:
-          - php-scrutinizer-run
-
-checks:
-  php: true
-tools:
-  php_code_coverage:
-    enabled: true
-  external_code_coverage:
-    timeout: 600
+          - command: vendor/bin/phpunit --coverage-clover=my-coverage-file
+            coverage:
+              file: my-coverage-file
+              format: php-clover

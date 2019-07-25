@@ -379,14 +379,16 @@ class Command
         return $this->request;
     }
 
+
     /**
      * Gets data from request
+     * @return bool
      */
-    public function parseRequest(): void
+    public function parseRequest(): bool
     {
         $request = $this->getRequest();
         if ($request === null) {
-            return;
+            return false;
         }
 
         // url
@@ -412,5 +414,7 @@ class Command
         if (!empty($data)) {
             $this->addOption('-d', (string)$request->getBody());
         }
+
+        return true;
     }
 }

@@ -294,4 +294,14 @@ EXP;
         $command->setRequest($request);
         $this->assertEquals("curl -H 'Set-Cookie: test1=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly' -H 'Set-Cookie: test2=2; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly' http://example.com", $command->build());
     }
+
+    public function testBuildParseRequest()
+    {
+        $command = new Command();
+        $this->assertFalse($command->parseRequest());
+
+        $request = new ServerRequest('GET', 'http://example.com');
+        $command->setRequest($request);
+        $this->assertTrue($command->parseRequest());
+    }
 }
