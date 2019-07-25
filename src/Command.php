@@ -32,9 +32,18 @@ class Command
     public const QUOTE_CHARACTER_DOUBLE = '"';
 
     /**
-     * @var string command name
+     * Command name
      */
     private const NAME = 'curl';
+
+    /**
+     * Header names that can use %x2C (",") character, so multiple header fields can't be folded into a single header field
+     */
+    private const HEADER_EXCEPTIONS = [
+        'set-cookie',
+        'www-authenticate',
+        'proxy-authenticate',
+    ];
 
     /**
      * @var string built command
@@ -383,7 +392,14 @@ class Command
             if (strtolower($name) === 'host') {
                 continue;
             }
-            $this->addOption('-H', $name . ': ' . $request->getHeaderLine($name));
+            if (in_array(strtolower($name), static::HEADER_EXCEPTIONS, true)) {
+                $header = $request->getHeader($name);
+                foreach ($header as $value) {
+                    $this->addOption('-H', $name . ': ' . $value);
+                }
+            } else {
+                $this->addOption('-H', $name . ': ' . $request->getHeaderLine($name));
+            }
         }
 
         // data

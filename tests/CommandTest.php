@@ -255,7 +255,7 @@ EXP;
         $this->assertEquals("curl -v -L -d 'test' http://example.com", $command->build());
     }
 
-    public function testPsrHttpRequest(): void
+    public function testBuildPsrHttpRequest(): void
     {
         $request = new ServerRequest('GET', 'http://example.com');
         $command = new Command();
@@ -279,5 +279,19 @@ EXP;
         $this->assertEquals('curl', $command->build());
         $command->parseRequest();
         $this->assertEquals("curl -H 'Connection: keep-alive' -H 'Accept: text/html, application/xhtml+xml' -d 'data' http://example.com", $command->build());
+    }
+
+    public function testBuildPsrHttpRequestHeaderExceptions()
+    {
+        $request = new ServerRequest('GET', 'http://example.com', [
+            'Set-Cookie' => [
+                'test1=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly',
+                'test2=2; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly',
+            ],
+        ]);
+
+        $command = new Command();
+        $command->setRequest($request);
+        $this->assertEquals("curl -H 'Set-Cookie: test1=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly' -H 'Set-Cookie: test2=2; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly' http://example.com", $command->build());
     }
 }
