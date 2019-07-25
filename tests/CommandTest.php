@@ -155,7 +155,7 @@ class CommandTest extends TestCase
         $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
         $this->assertEquals("curl -d 'arbitrary' http://example.com", $command->build());
 
-        $command->setQuoteCharacter('');
+        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_NONE);
         $this->assertEquals('curl -d arbitrary http://example.com', $command->build());
     }
 

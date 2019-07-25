@@ -32,6 +32,11 @@ class Command
     public const QUOTE_CHARACTER_DOUBLE = '"';
 
     /**
+     * No quote character
+     */
+    public const QUOTE_CHARACTER_NONE = '';
+
+    /**
      * Command name
      */
     private const NAME = 'curl';
