@@ -1,6 +1,6 @@
 # curl-builder [![Build Status](https://travis-ci.com/alexkart/curl-builder.svg?branch=master)](https://travis-ci.com/alexkart/curl-builder) [![Code Coverage](https://scrutinizer-ci.com/g/alexkart/curl-builder/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/alexkart/curl-builder/?branch=master)
 
-curl-builder is a curl command generator which can generate curl commands from PSR-7 server requests and manually by
+curl-builder is a curl command generator which can generate curl commands automatically from PSR-7 server requests and manually by
 specifying options and URL.
 
 ## Examples
