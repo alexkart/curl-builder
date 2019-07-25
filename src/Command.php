@@ -4,7 +4,7 @@ namespace Alexkart\CurlBuilder;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-class Command
+final class Command
 {
     /**
      * Template part which represents command name
@@ -24,22 +24,22 @@ class Command
     /**
      * Single quote character
      */
-    public const QUOTE_CHARACTER_SINGLE = "'";
+    public const QUOTE_SINGLE = "'";
 
     /**
      * Double quote character
      */
-    public const QUOTE_CHARACTER_DOUBLE = '"';
+    public const QUOTE_DOUBLE = '"';
 
     /**
      * No quote character
      */
-    public const QUOTE_CHARACTER_NONE = '';
+    public const QUOTE_NONE = '';
 
     /**
      * Command name
      */
-    private const NAME = 'curl';
+    private const COMMAND_NAME = 'curl';
 
     /**
      * Header names that can use %x2C (",") character, so multiple header fields can't be folded into a single header field
@@ -104,7 +104,7 @@ class Command
      * @param string $url
      * @return Command
      */
-    public function setUrl($url): Command
+    public function setUrl(string $url): Command
     {
         $this->url = $url;
         return $this;
@@ -160,7 +160,7 @@ class Command
      * @param string|null $argument
      * @return Command
      */
-    public function addOption($option, $argument = null): Command
+    public function addOption(string $option, $argument = null): Command
     {
         $this->options[$option][] = $argument;
         return $this;
@@ -190,7 +190,7 @@ class Command
     /**
      * @param string $command
      */
-    public function setCommand($command): void
+    public function setCommand(string $command): void
     {
         $this->command = $command;
     }
@@ -208,7 +208,7 @@ class Command
      */
     private function initQuoteCharacter(): void
     {
-        $this->setQuoteCharacter(static::QUOTE_CHARACTER_SINGLE);
+        $this->setQuoteCharacter(static::QUOTE_SINGLE);
     }
 
     /**
@@ -216,7 +216,7 @@ class Command
      */
     private function buildName(): void
     {
-        $this->buildTemplatePart(static::TEMPLATE_NAME, static::NAME);
+        $this->buildTemplatePart(static::TEMPLATE_NAME, static::COMMAND_NAME);
     }
 
     /**
@@ -242,11 +242,11 @@ class Command
     }
 
     /**
-     * Builds url
+     * Builds URL
      */
     private function buildUrl(): void
     {
-        $this->buildTemplatePart(static::TEMPLATE_URL, $this->getUrl());
+        $this->buildTemplatePart(static::TEMPLATE_URL, $this->getUrl() ?? '');
     }
 
     /**
@@ -254,7 +254,7 @@ class Command
      * @param string $search
      * @param string $replace
      */
-    private function buildTemplatePart($search, $replace): void
+    private function buildTemplatePart(string $search, string $replace): void
     {
         if ($replace === '') {
             // remove extra space
@@ -274,7 +274,7 @@ class Command
      */
     private function getTemplatePartPattern($search): string
     {
-        return '/ ?' . str_replace(['{', '}'], ['\{', '\}'], $search) . ' ?/';
+        return '/ ?' . preg_quote($search, '/') . ' ?/';
     }
 
     /**
@@ -300,7 +300,7 @@ class Command
      * @param string $argument
      * @return string
      */
-    private function quote($argument): string
+    private function quote(string $argument): string
     {
         $quoteCharacter = $this->getQuoteCharacter();
 
@@ -309,7 +309,7 @@ class Command
         }
 
         if (strpos($argument, $quoteCharacter) !== false) {
-            if ($quoteCharacter === static::QUOTE_CHARACTER_SINGLE) {
+            if ($quoteCharacter === static::QUOTE_SINGLE) {
                 return '$' . $quoteCharacter . $this->escape($argument) . $quoteCharacter;
             }
 
@@ -391,7 +391,7 @@ class Command
             return false;
         }
 
-        // url
+        // URL
         $this->setUrl((string)$request->getUri());
 
         // headers
@@ -400,8 +400,7 @@ class Command
                 continue;
             }
             if (in_array(strtolower($name), static::HEADER_EXCEPTIONS, true)) {
-                $header = $request->getHeader($name);
-                foreach ($header as $value) {
+                foreach ($request->getHeader($name) as $value) {
                     $this->addOption('-H', $name . ': ' . $value);
                 }
             } else {

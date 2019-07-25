@@ -149,13 +149,13 @@ class CommandTest extends TestCase
         // default is singe
         $this->assertEquals("curl -d 'arbitrary' http://example.com", $command->build());
 
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
+        $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
         $this->assertEquals('curl -d "arbitrary" http://example.com', $command->build());
 
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
+        $command->setQuoteCharacter(Command::QUOTE_SINGLE);
         $this->assertEquals("curl -d 'arbitrary' http://example.com", $command->build());
 
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_NONE);
+        $command->setQuoteCharacter(Command::QUOTE_NONE);
         $this->assertEquals('curl -d arbitrary http://example.com', $command->build());
     }
 
@@ -168,7 +168,7 @@ ARG;
 curl -d $'x=test\'1' http://example.com
 EXP;
         $command = new Command();
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
+        $command->setQuoteCharacter(Command::QUOTE_SINGLE);
         $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
@@ -180,7 +180,7 @@ ARG;
 curl -d 'x=test"2' http://example.com
 EXP;
         $command = new Command();
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
+        $command->setQuoteCharacter(Command::QUOTE_SINGLE);
         $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
@@ -192,7 +192,7 @@ ARG;
 curl -d $'x=test\'1"2' http://example.com
 EXP;
         $command = new Command();
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_SINGLE);
+        $command->setQuoteCharacter(Command::QUOTE_SINGLE);
         $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
@@ -204,7 +204,7 @@ ARG;
 curl -d "x=test'1" http://example.com
 EXP;
         $command = new Command();
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
+        $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
         $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
@@ -216,7 +216,7 @@ ARG;
 curl -d "x=test\"2" http://example.com
 EXP;
         $command = new Command();
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
+        $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
         $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
@@ -228,7 +228,7 @@ ARG;
 curl -d "x=test'1\"2" http://example.com
 EXP;
         $command = new Command();
-        $command->setQuoteCharacter(Command::QUOTE_CHARACTER_DOUBLE);
+        $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
         $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
@@ -281,7 +281,7 @@ EXP;
         $this->assertEquals("curl -H 'Connection: keep-alive' -H 'Accept: text/html, application/xhtml+xml' -d 'data' http://example.com", $command->build());
     }
 
-    public function testBuildPsrHttpRequestHeaderExceptions()
+    public function testBuildPsrHttpRequestHeaderExceptions(): void
     {
         $request = new ServerRequest('GET', 'http://example.com', [
             'Set-Cookie' => [
@@ -295,7 +295,7 @@ EXP;
         $this->assertEquals("curl -H 'Set-Cookie: test1=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly' -H 'Set-Cookie: test2=2; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly' http://example.com", $command->build());
     }
 
-    public function testBuildParseRequest()
+    public function testBuildParseRequest(): void
     {
         $command = new Command();
         $this->assertFalse($command->parseRequest());
