@@ -13,6 +13,6 @@ install:
   # install composer dependencies
   - travis_retry composer self-update
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - travis_retry composer install $DEFAULT_COMPOSER_FLAGS
+  - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
 
 script: vendor/bin/phpunit --verbose
