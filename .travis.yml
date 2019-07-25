@@ -1,5 +1,10 @@
 language: php
 
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+
 env:
   global:
     - DEFAULT_COMPOSER_FLAGS="--prefer-dist --no-interaction --no-progress --optimize-autoloader"
