@@ -246,7 +246,7 @@ final class Command
      */
     private function buildUrl(): void
     {
-        $this->buildTemplatePart(static::TEMPLATE_URL, $this->getUrl() ?? '');
+        $this->buildTemplatePart(static::TEMPLATE_URL, $this->getUrl());
     }
 
     /**
