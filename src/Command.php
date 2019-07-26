@@ -9,7 +9,7 @@ final class Command
     /**
      * Template part which represents command name
      */
-    public const TEMPLATE_NAME = '{name}';
+    public const TEMPLATE_COMMAND_NAME = '{name}';
 
     /**
      * Template part which represents command line options
@@ -200,7 +200,7 @@ final class Command
      */
     private function initTemplate(): void
     {
-        $this->setTemplate(static::TEMPLATE_NAME . static::TEMPLATE_OPTIONS . static::TEMPLATE_URL);
+        $this->setTemplate(static::TEMPLATE_COMMAND_NAME . static::TEMPLATE_OPTIONS . static::TEMPLATE_URL);
     }
 
     /**
@@ -216,7 +216,7 @@ final class Command
      */
     private function buildName(): void
     {
-        $this->buildTemplatePart(static::TEMPLATE_NAME, static::COMMAND_NAME);
+        $this->buildTemplatePart(static::TEMPLATE_COMMAND_NAME, static::COMMAND_NAME);
     }
 
     /**
@@ -320,7 +320,7 @@ final class Command
     }
 
     /**
-     * Escapes double quotes in the argument
+     * Escapes quotes in the argument
      * @param string $argument
      * @return string
      */

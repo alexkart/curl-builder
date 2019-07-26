@@ -8,6 +8,14 @@ use PHPUnit\Framework\TestCase;
 
 class CommandTest extends TestCase
 {
+    public function getNewCommand(): Command
+    {
+        $command = new Command();
+        $command->setUrl('http://example.com');
+
+        return $command;
+    }
+
     public function testBuildMinimal(): void
     {
         $command = new Command();
@@ -17,8 +25,8 @@ class CommandTest extends TestCase
     public function testBuildWithUrl(): void
     {
         $command = new Command();
-        $command->setUrl('http://example.com');
-        $this->assertEquals('curl http://example.com', $command->build());
+        $command->setUrl('http://example.com/test');
+        $this->assertEquals('curl http://example.com/test', $command->build());
     }
 
     public function testBuildWithOption(): void
@@ -38,16 +46,14 @@ class CommandTest extends TestCase
 
     public function testBuildWithUrlAndOption(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-v');
         $this->assertEquals('curl -v http://example.com', $command->build());
     }
 
     public function testBuildWithUrlAndOptions(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-v');
         $command->addOption('-L');
         $this->assertEquals('curl -v -L http://example.com', $command->build());
@@ -57,8 +63,7 @@ class CommandTest extends TestCase
 
     public function testBuildSetOptions(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
 
         $command->setOptions([]);
         $this->assertEquals('curl http://example.com', $command->build());
@@ -85,8 +90,7 @@ class CommandTest extends TestCase
 
     public function testBuildDuplicatedOptions(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-v');
         $command->addOption('-L');
         $command->addOption('-L');
@@ -95,14 +99,13 @@ class CommandTest extends TestCase
 
     public function testBuildSetTemplate(): void
     {
-        $command = new Command();
-        $command->setTemplate(Command::TEMPLATE_NAME . Command::TEMPLATE_URL . Command::TEMPLATE_OPTIONS);
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
+        $command->setTemplate(Command::TEMPLATE_COMMAND_NAME . Command::TEMPLATE_URL . Command::TEMPLATE_OPTIONS);
         $command->addOption('-v');
         $command->addOption('-L');
         $this->assertEquals('curl http://example.com -v -L', $command->build());
 
-        $command->setTemplate(Command::TEMPLATE_NAME . Command::TEMPLATE_URL);
+        $command->setTemplate(Command::TEMPLATE_COMMAND_NAME . Command::TEMPLATE_URL);
         $this->assertEquals('curl http://example.com', $command->build());
 
         $command->setTemplate('');
@@ -111,8 +114,7 @@ class CommandTest extends TestCase
 
     public function testBuildWithLongOptions(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('--verbose');
         $this->assertEquals('curl --verbose http://example.com', $command->build());
 
@@ -122,28 +124,24 @@ class CommandTest extends TestCase
 
     public function testBuildWithArgumentsToOptions(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-d', 'arbitrary');
         $this->assertEquals("curl -d 'arbitrary' http://example.com", $command->build());
 
         // data from file
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-d', '@json.txt');
         $this->assertEquals("curl -d '@json.txt' http://example.com", $command->build());
 
         // argument with spaces
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-d', 'I am your father');
         $this->assertEquals("curl -d 'I am your father' http://example.com", $command->build());
     }
 
     public function testBuildSetQuoteCharacter(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-d', 'arbitrary');
 
         // default is singe
@@ -167,9 +165,8 @@ ARG;
         $expected = <<<EXP
 curl -d $'x=test\'1' http://example.com
 EXP;
-        $command = new Command();
+        $command = $this->getNewCommand();
         $command->setQuoteCharacter(Command::QUOTE_SINGLE);
-        $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
 
@@ -179,9 +176,8 @@ ARG;
         $expected = <<<EXP
 curl -d 'x=test"2' http://example.com
 EXP;
-        $command = new Command();
+        $command = $this->getNewCommand();
         $command->setQuoteCharacter(Command::QUOTE_SINGLE);
-        $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
 
@@ -191,9 +187,8 @@ ARG;
         $expected = <<<EXP
 curl -d $'x=test\'1"2' http://example.com
 EXP;
-        $command = new Command();
+        $command = $this->getNewCommand();
         $command->setQuoteCharacter(Command::QUOTE_SINGLE);
-        $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
 
@@ -203,9 +198,8 @@ ARG;
         $expected = <<<EXP
 curl -d "x=test'1" http://example.com
 EXP;
-        $command = new Command();
+        $command = $this->getNewCommand();
         $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
-        $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
 
@@ -215,9 +209,8 @@ ARG;
         $expected = <<<EXP
 curl -d "x=test\"2" http://example.com
 EXP;
-        $command = new Command();
+        $command = $this->getNewCommand();
         $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
-        $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
 
@@ -227,17 +220,15 @@ ARG;
         $expected = <<<EXP
 curl -d "x=test'1\"2" http://example.com
 EXP;
-        $command = new Command();
+        $command = $this->getNewCommand();
         $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
-        $command->setUrl('http://example.com');
         $command->addOption('-d', $argument);
         $this->assertEquals($expected, $command->build());
     }
 
     public function testBuildMultipleOptions(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-H', 'Connection: keep-alive');
         $command->addOption('-H', 'Cache-Control: max-age=0');
         $this->assertEquals("curl -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' http://example.com", $command->build());
@@ -245,8 +236,7 @@ EXP;
 
     public function testBuildAddOptions(): void
     {
-        $command = new Command();
-        $command->setUrl('http://example.com');
+        $command = $this->getNewCommand();
         $command->addOption('-v');
         $command->addOptions([
             '-L',

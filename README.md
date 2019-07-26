@@ -83,12 +83,12 @@ $curl = $command->build();
 // curl -v -L http://example.com
 
 // change order
-$command->setTemplate(Command::TEMPLATE_NAME . Command::TEMPLATE_URL . Command::TEMPLATE_OPTIONS);
+$command->setTemplate(Command::TEMPLATE_COMMAND_NAME . Command::TEMPLATE_URL . Command::TEMPLATE_OPTIONS);
 $curl = $command->build();
 // curl http://example.com -v -L
 
 // remove options
-$command->setTemplate(Command::TEMPLATE_NAME . Command::TEMPLATE_URL);
+$command->setTemplate(Command::TEMPLATE_COMMAND_NAME . Command::TEMPLATE_URL);
 $curl = $command->build();
 // curl http://example.com
 ```
