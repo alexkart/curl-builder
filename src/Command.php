@@ -53,12 +53,12 @@ final class Command
     /**
      * @var string built command
      */
-    private $command;
+    private $command = '';
 
     /**
      * @var string url
      */
-    private $url;
+    private $url = '';
 
     /**
      * @var string command template
@@ -112,9 +112,9 @@ final class Command
 
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getUrl(): ?string
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -272,7 +272,7 @@ final class Command
      * @param string $search
      * @return string
      */
-    private function getTemplatePartPattern($search): string
+    private function getTemplatePartPattern(string $search): string
     {
         return '/ ?' . preg_quote($search, '/') . ' ?/';
     }
@@ -361,7 +361,7 @@ final class Command
      * @param bool $parse
      * @return Command
      */
-    public function setRequest(?ServerRequestInterface $request, $parse = true): Command
+    public function setRequest(?ServerRequestInterface $request, bool $parse = true): Command
     {
         $this->request = $request;
         if ($parse) {
