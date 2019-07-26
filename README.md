@@ -11,7 +11,7 @@ composer require alexkart/curl-builder
 
 ## Examples
 
-### Generating curl command from PSR-7 request:
+### Generating curl command from PSR-7 request
 ```php
 $request = new ServerRequest('POST', 'http://example.com', [
     'Connection' => ['keep-alive'],
@@ -26,7 +26,7 @@ $curl = $command->build();
 // curl -H 'Connection: keep-alive' -H 'Accept: text/html, application/xhtml+xml' -d 'data' http://example.com
 ```
 
-### Constructing curl command manually:
+### Constructing curl command manually
 ```php
 $command = new Command();
 $command->setUrl('http://example.com');
