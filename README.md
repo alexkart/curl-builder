@@ -3,6 +3,12 @@
 curl-builder is a curl command generator which can generate curl commands automatically from PSR-7 server requests and manually by
 specifying options and URL.
 
+## Installation
+
+```bash
+composer require alexkart/curl-builder
+```
+
 ## Examples
 
 ### Generating curl command from PSR-7 request:
