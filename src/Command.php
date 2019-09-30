@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Alexkart\CurlBuilder;
 
@@ -338,7 +338,7 @@ final class Command
     {
         $formattedOptions = [];
         foreach ($options as $option => $arguments) {
-            $option = trim($option);
+            $option = trim((string)$option);
             if (strpos($option, '-') !== 0) {
                 // ['-L', '-v']
                 $formattedOptions[$arguments] = [null];
