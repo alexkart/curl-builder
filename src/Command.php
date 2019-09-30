@@ -226,7 +226,7 @@ final class Command
     {
         $optionsString = '';
         $options = $this->getOptions();
-        if (is_array($options) && !empty($options)) {
+        if (!empty($options)) {
             foreach ($options as $option => $arguments) {
                 foreach ($arguments as $argument) {
                     $optionsString .= ' ' . $option;
@@ -395,7 +395,8 @@ final class Command
         $this->setUrl((string)$request->getUri());
 
         // headers
-        foreach ($request->getHeaders() as $name => $values) {
+        foreach (array_keys($request->getHeaders()) as $name) {
+            $name = (string)$name;
             if (strtolower($name) === 'host') {
                 continue;
             }
