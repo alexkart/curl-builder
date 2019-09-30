@@ -29,5 +29,8 @@
     "psr-4": {
       "Alexkart\\CurlBuilder\\Tests\\": "tests"
     }
+  },
+  "scripts": {
+    "phan": "phan --progress-bar -o analysis.txt"
   }
 }
