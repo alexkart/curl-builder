@@ -13,6 +13,10 @@ install:
   # install composer dependencies
   - travis_retry composer self-update
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
+  - travis_retry composer install $DEFAULT_COMPOSER_FLAGS
+  - source tests/travis/ext-ast.sh
 
-script: vendor/bin/phpunit --verbose
+script:
+  - vendor/bin/phpunit --verbose
+  - composer phan
+  - cat analysis.txt
