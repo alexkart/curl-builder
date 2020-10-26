@@ -23,5 +23,5 @@ script:
   - |
     if [[ $TRAVIS_PHP_VERSION != 8.0snapshot ]]; then
       composer phan
+      cat analysis.txt
     fi
-  - cat analysis.txt
