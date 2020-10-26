@@ -20,5 +20,8 @@ install:
 
 script:
   - vendor/bin/phpunit --verbose
-  - composer phan
+  - |
+    if [[ $TRAVIS_PHP_VERSION != 8.0snapshot ]]; then
+      composer phan
+    fi
   - cat analysis.txt
