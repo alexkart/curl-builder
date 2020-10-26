@@ -4,10 +4,12 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
+  - 8.0snapshot
 
 env:
   global:
-    - DEFAULT_COMPOSER_FLAGS="--prefer-dist --no-interaction --no-progress --optimize-autoloader"
+    - DEFAULT_COMPOSER_FLAGS="--prefer-dist --no-interaction --no-progress --optimize-autoloader --ignore-platform-reqs"
 
 install:
   # install composer dependencies
@@ -18,5 +20,8 @@ install:
 
 script:
   - vendor/bin/phpunit --verbose
-  - composer phan
-  - cat analysis.txt
+  - |
+    if [[ $TRAVIS_PHP_VERSION != 8.0snapshot ]]; then
+      composer phan
+      cat analysis.txt
+    fi
