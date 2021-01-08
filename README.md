@@ -73,7 +73,7 @@ $command->setOptions(['-L', '-v']);
 
 // options with arguments
 $command->setOptions(['-H' => 'test']);
-//curl -H 'test' ...
+// curl -H 'test' ...
 $command->setOptions(['-H' => ['test1', 'test2']]);
 // curl -H 'test1' -H 'test2'
 ```
