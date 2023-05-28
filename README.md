@@ -13,7 +13,7 @@ composer require alexkart/curl-builder
 
 ### Generating curl command from PSR-7 request
 ```php
-$request = new ServerRequest('POST', 'http://example.com', [
+$request = new Request('POST', 'http://example.com', [
     'Connection' => ['keep-alive'],
     'Accept' => [
         'text/html',
