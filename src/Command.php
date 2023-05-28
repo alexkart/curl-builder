@@ -2,7 +2,7 @@
 
 namespace Alexkart\CurlBuilder;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 final class Command
 {
@@ -77,7 +77,7 @@ final class Command
     private $quoteCharacter;
 
     /**
-     * @var ServerRequestInterface|null
+     * @var RequestInterface|null
      */
     private $request;
 
@@ -200,7 +200,7 @@ final class Command
      */
     private function initTemplate(): void
     {
-        $this->setTemplate(static::TEMPLATE_COMMAND_NAME . static::TEMPLATE_OPTIONS . static::TEMPLATE_URL);
+        $this->setTemplate(self::TEMPLATE_COMMAND_NAME . self::TEMPLATE_OPTIONS . self::TEMPLATE_URL);
     }
 
     /**
@@ -208,7 +208,7 @@ final class Command
      */
     private function initQuoteCharacter(): void
     {
-        $this->setQuoteCharacter(static::QUOTE_SINGLE);
+        $this->setQuoteCharacter(self::QUOTE_SINGLE);
     }
 
     /**
@@ -216,7 +216,7 @@ final class Command
      */
     private function buildName(): void
     {
-        $this->buildTemplatePart(static::TEMPLATE_COMMAND_NAME, static::COMMAND_NAME);
+        $this->buildTemplatePart(self::TEMPLATE_COMMAND_NAME, self::COMMAND_NAME);
     }
 
     /**
@@ -238,7 +238,7 @@ final class Command
         }
         $optionsString = trim($optionsString);
 
-        $this->buildTemplatePart(static::TEMPLATE_OPTIONS, $optionsString);
+        $this->buildTemplatePart(self::TEMPLATE_OPTIONS, $optionsString);
     }
 
     /**
@@ -246,7 +246,7 @@ final class Command
      */
     private function buildUrl(): void
     {
-        $this->buildTemplatePart(static::TEMPLATE_URL, $this->getUrl());
+        $this->buildTemplatePart(self::TEMPLATE_URL, $this->getUrl());
     }
 
     /**
@@ -309,7 +309,7 @@ final class Command
         }
 
         if (strpos($argument, $quoteCharacter) !== false) {
-            if ($quoteCharacter === static::QUOTE_SINGLE) {
+            if ($quoteCharacter === self::QUOTE_SINGLE) {
                 return '$' . $quoteCharacter . $this->escape($argument) . $quoteCharacter;
             }
 
@@ -330,7 +330,7 @@ final class Command
     }
 
     /**
-     * Converts option from user friendly format ot internal format
+     * Converts option from user-friendly format ot internal format
      * @param array $options
      * @return array
      */
@@ -357,11 +357,11 @@ final class Command
 
     /**
      * Sets request. If $parse = true gets data from request
-     * @param ServerRequestInterface|null $request
+     * @param RequestInterface|null $request
      * @param bool $parse
      * @return Command
      */
-    public function setRequest(?ServerRequestInterface $request, bool $parse = true): Command
+    public function setRequest(?RequestInterface $request, bool $parse = true): Command
     {
         $this->request = $request;
         if ($parse) {
@@ -372,9 +372,9 @@ final class Command
     }
 
     /**
-     * @return ServerRequestInterface|null
+     * @return RequestInterface|null
      */
-    public function getRequest(): ?ServerRequestInterface
+    public function getRequest(): ?RequestInterface
     {
         return $this->request;
     }
@@ -400,7 +400,7 @@ final class Command
             if (strtolower($name) === 'host') {
                 continue;
             }
-            if (in_array(strtolower($name), static::HEADER_EXCEPTIONS, true)) {
+            if (in_array(strtolower($name), self::HEADER_EXCEPTIONS, true)) {
                 foreach ($request->getHeader($name) as $value) {
                     $this->addOption('-H', $name . ': ' . $value);
                 }

@@ -3,7 +3,7 @@
 namespace Alexkart\CurlBuilder\Tests;
 
 use Alexkart\CurlBuilder\Command;
-use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 
 class CommandTest extends TestCase
@@ -247,12 +247,12 @@ EXP;
 
     public function testBuildPsrHttpRequest(): void
     {
-        $request = new ServerRequest('GET', 'http://example.com');
+        $request = new Request('GET', 'http://example.com');
         $command = new Command();
         $command->setRequest($request);
         $this->assertEquals('curl http://example.com', $command->build());
 
-        $request = new ServerRequest('POST', 'http://example.com', [
+        $request = new Request('POST', 'http://example.com', [
             'Connection' => ['keep-alive'],
             'Accept' => [
                 'text/html',
@@ -273,7 +273,7 @@ EXP;
 
     public function testBuildPsrHttpRequestHeaderExceptions(): void
     {
-        $request = new ServerRequest('GET', 'http://example.com', [
+        $request = new Request('GET', 'http://example.com', [
             'Set-Cookie' => [
                 'test1=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly',
                 'test2=2; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/; Secure; HttpOnly',
@@ -290,7 +290,7 @@ EXP;
         $command = new Command();
         $this->assertFalse($command->parseRequest());
 
-        $request = new ServerRequest('GET', 'http://example.com');
+        $request = new Request('GET', 'http://example.com');
         $command->setRequest($request);
         $this->assertTrue($command->parseRequest());
     }
