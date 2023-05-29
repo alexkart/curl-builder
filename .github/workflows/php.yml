@@ -37,4 +37,8 @@ jobs:
         run: composer run-script test
 
       - name: Run phan
-        run: composer phan ; cat analysis.txt
+        run: composer phan
+
+      - name: phan analysis
+        run: cat analysis.txt
+        if: failure()
