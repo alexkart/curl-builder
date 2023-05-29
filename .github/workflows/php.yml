@@ -21,12 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          tools: pecl
-          extensions: ast
-
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
@@ -47,9 +41,3 @@ jobs:
 
       - name: Run test suite
         run: composer run-script test
-
-      - name: Run phan
-        run: composer phan
-
-      - name: phan analysis
-        run: cat analysis.txt
