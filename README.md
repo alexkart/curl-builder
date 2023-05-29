@@ -1,4 +1,4 @@
-# curl-builder [![Build status](https://github.com/alexkart/curl-builder/actions/workflows/php.yml/badge.svg?event=push)]([https://github.com/alexkart/curl-builder/actions](https://github.com/alexkart/curl-builder/actions/workflows/php.yml)) [![Code Coverage](https://scrutinizer-ci.com/g/alexkart/curl-builder/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/alexkart/curl-builder/?branch=master)
+# curl-builder [![build](https://github.com/alexkart/curl-builder/actions/workflows/php.yml/badge.svg)](https://github.com/alexkart/curl-builder/actions/workflows/php.yml) [![Code Coverage](https://scrutinizer-ci.com/g/alexkart/curl-builder/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/alexkart/curl-builder/?branch=master)
 
 curl-builder is a curl command generator which can generate curl commands automatically from PSR-7 server requests and manually by
 specifying options and URL.
