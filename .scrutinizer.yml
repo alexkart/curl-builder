@@ -1,4 +1,13 @@
 build:
+  image: default-bionic
+
+  environment:
+    php:
+      version: 8.0.18
+      pecl_extensions:
+        - uopz
+      ini:
+        xdebug.mode: coverage
   nodes:
     my-tests-with-coverage:
       tests:
