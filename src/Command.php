@@ -174,7 +174,7 @@ final class Command
         $options = $this->toInternalFormat($options);
         foreach ($options as $option => $arguments) {
             foreach ($arguments as $argument) {
-                $this->addOption((string)$option, $argument);
+                $this->addOption($option, $argument);
             }
         }
     }
