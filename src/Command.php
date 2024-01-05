@@ -66,7 +66,7 @@ final class Command
     private $template;
 
     /**
-     * @var array command line options
+     * @var array<mixed> command line options
      */
     private $options = [];
 
@@ -138,7 +138,7 @@ final class Command
     }
 
     /**
-     * @param array $options
+     * @param array<mixed> $options
      * @return Command
      */
     public function setOptions(array $options): Command
@@ -148,7 +148,7 @@ final class Command
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getOptions(): array
     {
@@ -167,7 +167,7 @@ final class Command
     }
 
     /**
-     * @param array $options
+     * @param array<mixed> $options
      */
     public function addOptions(array $options): void
     {
@@ -331,7 +331,7 @@ final class Command
 
     /**
      * Converts option from user-friendly format ot internal format
-     * @param array $options
+     * @param array<mixed> $options
      * @return array
      */
     private function toInternalFormat(array $options): array

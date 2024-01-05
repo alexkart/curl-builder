@@ -18,7 +18,8 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "nyholm/psr7": "^1.3",
-        "phan/phan": "^5.4"
+        "phan/phan": "^5.4",
+        "phpstan/phpstan": "^1.10"
     },
     "autoload": {
         "psr-4": {
@@ -32,6 +33,7 @@
     },
     "scripts": {
         "phan": "phan --progress-bar -o analysis.txt",
+        "phpstan": "vendor/bin/phpstan analyse -l 9 src tests",
         "test": "vendor/bin/phpunit"
     }
 }
