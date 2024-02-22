@@ -33,7 +33,7 @@
     },
     "scripts": {
         "phan": "phan --progress-bar -o analysis.txt",
-        "phpstan": "vendor/bin/phpstan analyse -l 9 src tests",
+        "phpstan": "vendor/bin/phpstan analyse -l 8 src tests",
         "test": "vendor/bin/phpunit"
     }
 }

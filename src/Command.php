@@ -258,7 +258,7 @@ final class Command
     {
         if ($replace === '') {
             // remove extra space
-            $this->setCommand(preg_replace($this->getTemplatePartPattern($search), $search, $this->getCommand()));
+            $this->setCommand((string)preg_replace($this->getTemplatePartPattern($search), $search, $this->getCommand()));
         } else {
             // add space
             $replace = ' ' . $replace;
@@ -332,7 +332,7 @@ final class Command
     /**
      * Converts option from user-friendly format ot internal format
      * @param array<mixed> $options
-     * @return array
+     * @return array<mixed>
      */
     private function toInternalFormat(array $options): array
     {
