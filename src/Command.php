@@ -305,15 +305,15 @@ final class Command
         $quoteCharacter = $this->getQuoteCharacter();
 
         if ($quoteCharacter === '') {
-            return $argument;
+            return $this->escapeSpaces($argument);
         }
 
         if (strpos($argument, $quoteCharacter) !== false) {
             if ($quoteCharacter === self::QUOTE_SINGLE) {
-                return '$' . $quoteCharacter . $this->escape($argument) . $quoteCharacter;
+                return '$' . $quoteCharacter . $this->escapeQuotes($argument) . $quoteCharacter;
             }
 
-            return $quoteCharacter . $this->escape($argument) . $quoteCharacter;
+            return $quoteCharacter . $this->escapeQuotes($argument) . $quoteCharacter;
         }
 
         return $quoteCharacter . $argument . $quoteCharacter;
@@ -324,9 +324,19 @@ final class Command
      * @param string $argument
      * @return string
      */
-    private function escape(string $argument): string
+    private function escapeQuotes(string $argument): string
     {
         return str_replace($this->getQuoteCharacter(), '\\' . $this->getQuoteCharacter(), $argument);
+    }
+
+    /**
+     * Escapes spaces in the argument when no quoting is used
+     * @param string $argument
+     * @return string
+     */
+    private function escapeSpaces(string $argument): string
+    {
+        return str_replace(' ', '\\ ', $argument);
     }
 
     /**

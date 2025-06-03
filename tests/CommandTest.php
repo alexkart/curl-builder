@@ -308,4 +308,24 @@ EXP;
         $command->setRequest($request);
         $this->assertTrue($command->parseRequest());
     }
+
+    public function testBuildPsrHttpRequestSkipHostHeader(): void
+    {
+        $request = new Request('GET', 'http://example.com', [
+            'Host' => ['example.com'],
+            'Custom' => ['value'],
+        ]);
+
+        $command = new Command();
+        $command->setRequest($request);
+        $this->assertSame("curl -H 'Custom: value' http://example.com", $command->build());
+    }
+
+    public function testBuildWithQuoteNoneAndSpaces(): void
+    {
+        $command = $this->getNewCommand();
+        $command->setQuoteCharacter(Command::QUOTE_NONE);
+        $command->addOption('-d', 'value with spaces');
+        $this->assertSame('curl -d value\\ with\\ spaces http://example.com', $command->build());
+    }
 }
