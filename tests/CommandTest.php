@@ -144,7 +144,7 @@ class CommandTest extends TestCase
         $command = $this->getNewCommand();
         $command->addOption('-d', 'arbitrary');
 
-        // default is singe
+        // default is single
         $this->assertSame("curl -d 'arbitrary' http://example.com", $command->build());
 
         $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
