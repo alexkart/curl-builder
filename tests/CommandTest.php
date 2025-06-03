@@ -157,6 +157,14 @@ class CommandTest extends TestCase
         $this->assertSame('curl -d arbitrary http://example.com', $command->build());
     }
 
+    public function testAddOptionWithNumericArgument(): void
+    {
+        $command = $this->getNewCommand();
+        $command->setQuoteCharacter(Command::QUOTE_NONE);
+        $command->addOption('-d', 123);
+        $this->assertSame('curl -d 123 http://example.com', $command->build());
+    }
+
     public function testBuildEscapeArguments(): void
     {
         $argument = <<<ARG

@@ -231,7 +231,7 @@ final class Command
                 foreach ($arguments as $argument) {
                     $optionsString .= ' ' . $option;
                     if ($argument !== null) {
-                        $optionsString .= ' ' . $this->quote($argument);
+                        $optionsString .= ' ' . $this->quote((string)$argument);
                     }
                 }
             }
