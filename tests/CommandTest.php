@@ -97,6 +97,20 @@ class CommandTest extends TestCase
         $this->assertSame('curl -v -L -L http://example.com', $command->build());
     }
 
+    public function testBuildDuplicatedOptionsAddOptions(): void
+    {
+        $command = $this->getNewCommand();
+        $command->addOptions(['-v', '-v']);
+        $this->assertSame('curl -v -v http://example.com', $command->build());
+    }
+
+    public function testBuildDuplicatedOptionsSetOptions(): void
+    {
+        $command = $this->getNewCommand();
+        $command->setOptions(['-v', '-v']);
+        $this->assertSame('curl -v -v http://example.com', $command->build());
+    }
+
     public function testBuildSetTemplate(): void
     {
         $command = $this->getNewCommand();

@@ -339,15 +339,18 @@ final class Command
         $formattedOptions = [];
         foreach ($options as $option => $arguments) {
             $option = trim((string)$option);
+
             if (strpos($option, '-') !== 0) {
                 // ['-L', '-v']
-                $formattedOptions[$arguments] = [null];
+                $option = (string)$arguments;
+                $arguments = [null];
             } elseif (!is_array($arguments)) {
                 // ['-L' => null, '-v' => null]
-                $formattedOptions[$option] = [$arguments];
-            } else {
-                // internal format
-                $formattedOptions[$option] = $arguments;
+                $arguments = [$arguments];
+            }
+
+            foreach ($arguments as $argument) {
+                $formattedOptions[$option][] = $argument;
             }
         }
 
