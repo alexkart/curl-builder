@@ -119,4 +119,8 @@ $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
 $command->addOption('-d', 'data');
 $command->setQuoteCharacter(Command::QUOTE_NONE);
 // curl -d data
+
+$command->addOption('-d', 'value with spaces');
+$command->setQuoteCharacter(Command::QUOTE_NONE);
+// curl -d value\ with\ spaces
 ``` 
