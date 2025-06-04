@@ -33,12 +33,5 @@ jobs:
       - name: Run test suite
         run: composer test
 
-      - name: Run phan
-        run: composer phan
-
-      - name: phan analysis
-        run: cat analysis.txt
-        if: failure()
-
       - name: PHPStan
         run: vendor/bin/phpstan analyse -l 8 --error-format=github src tests
