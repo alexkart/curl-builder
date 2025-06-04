@@ -33,6 +33,7 @@ $command->setUrl('http://example.com');
 $command->addOption('-v');
 $command->addOption('-H', 'Connection: keep-alive');
 $command->addOption('-H', 'Cache-Control: max-age=0');
+$curl = $command->build();
 // curl -v -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' http://example.com
 ```
 
@@ -75,11 +76,11 @@ $command->setOptions(['-L', '-v']);
 $command->setOptions(['-H' => 'test']);
 // curl -H 'test' ...
 $command->setOptions(['-H' => ['test1', 'test2']]);
-// curl -H 'test1' -H 'test2'
+// curl -H 'test1' -H 'test2' ...
 ```
 
 ### Specifying command template
-Default template for the command is `{name}{option}{url}`. But you can change it with `setTemplate()` method
+Default template for the command is `{name}{options}{url}`. But you can change it with `setTemplate()` method
 ```php
 $command = new Command();
 $command->setUrl('http://example.com');
@@ -114,7 +115,7 @@ Quoting character can be changed to double quote or removed
 $command->addOption('-d', 'data1');
 $command->addOption('-d', 'data"2');
 $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
-// curl -d "data" -d "data\"2"
+// curl -d "data1" -d "data\"2"
 
 $command->addOption('-d', 'data');
 $command->setQuoteCharacter(Command::QUOTE_NONE);
@@ -123,4 +124,4 @@ $command->setQuoteCharacter(Command::QUOTE_NONE);
 $command->addOption('-d', 'value with spaces');
 $command->setQuoteCharacter(Command::QUOTE_NONE);
 // curl -d value\ with\ spaces
-``` 
+```
