@@ -328,4 +328,81 @@ EXP;
         $command->addOption('-d', 'value with spaces');
         $this->assertSame('curl -d value\\ with\\ spaces http://example.com', $command->build());
     }
+
+    public function testGettersReturnCorrectValues(): void
+    {
+        $command = new Command();
+        
+        // Test default values
+        $this->assertSame('', $command->getUrl());
+        $this->assertSame(Command::QUOTE_SINGLE, $command->getQuoteCharacter());
+        $this->assertSame(Command::TEMPLATE_COMMAND_NAME . Command::TEMPLATE_OPTIONS . Command::TEMPLATE_URL, $command->getTemplate());
+        $this->assertSame([], $command->getOptions());
+        $this->assertNull($command->getRequest());
+        
+        // Test after setting values
+        $command->setUrl('http://test.com');
+        $this->assertSame('http://test.com', $command->getUrl());
+        
+        $command->setQuoteCharacter(Command::QUOTE_DOUBLE);
+        $this->assertSame(Command::QUOTE_DOUBLE, $command->getQuoteCharacter());
+    }
+
+    public function testTemplateConstants(): void
+    {
+        $this->assertSame('{name}', Command::TEMPLATE_COMMAND_NAME);
+        $this->assertSame('{options}', Command::TEMPLATE_OPTIONS);
+        $this->assertSame('{url}', Command::TEMPLATE_URL);
+        $this->assertSame("'", Command::QUOTE_SINGLE);
+        $this->assertSame('"', Command::QUOTE_DOUBLE);
+        $this->assertSame('', Command::QUOTE_NONE);
+    }
+
+    public function testBuildWithEmptyUrl(): void
+    {
+        $command = new Command();
+        $command->setUrl('');
+        $this->assertSame('curl', $command->build());
+    }
+
+    public function testComplexQuotingScenarios(): void
+    {
+        $command = $this->getNewCommand();
+        $command->setQuoteCharacter(Command::QUOTE_SINGLE);
+        $command->addOption('-d', "line1\nline2");
+        $this->assertSame("curl -d 'line1\nline2' http://example.com", $command->build());
+
+        $command = $this->getNewCommand();
+        $command->setQuoteCharacter(Command::QUOTE_SINGLE);
+        $command->addOption('-d', "tab\there");
+        $this->assertSame("curl -d 'tab\there' http://example.com", $command->build());
+    }
+
+    public function testHttpMethodsWithRequest(): void
+    {
+        $methods = ['PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'];
+        
+        foreach ($methods as $method) {
+            $request = new Request($method, 'http://example.com', [], 'test data');
+            $command = new Command();
+            $command->setRequest($request);
+            $this->assertStringContainsString("curl -d 'test data' http://example.com", $command->build());
+        }
+    }
+
+    public function testEmptyOptionsArray(): void
+    {
+        $command = $this->getNewCommand();
+        $command->setOptions([]);
+        $this->assertSame('curl http://example.com', $command->build());
+        $this->assertSame([], $command->getOptions());
+    }
+
+    public function testNullArgumentsInOptions(): void
+    {
+        $command = $this->getNewCommand();
+        $command->addOption('-v', null);
+        $command->addOption('-L', null);
+        $this->assertSame('curl -v -L http://example.com', $command->build());
+    }
 }
